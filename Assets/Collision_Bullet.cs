@@ -21,7 +21,7 @@ public class Collision_Bullet : MonoBehaviour {
         {
             health otherScript = col.gameObject.GetComponent<health>();
             otherScript.takeDamage(10);
-            Destroy(this.gameObject);
+            this.gameObject.SetActive(false);
         }
     }
 }

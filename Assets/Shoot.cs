@@ -7,6 +7,7 @@ public class Shoot : MonoBehaviour {
     public Pool pool;
 
     public float speed;
+    private float force = 0;
     //public float deathTimer    
     public float travelX;
 
@@ -21,9 +22,18 @@ public class Shoot : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         //rotation        
-        if (Input.GetKeyDown(KeyCode.Space))
+        if (!Input.GetButton("Fire1") && force >0)
         {
-           Fire();    
+            if (force < 0.5)
+            {
+                force = 1f;
+            }
+           Fire();
+           force = 0; 
+        }
+        else if (Input.GetButton("Fire1"))
+        {
+            force += speed * Time.deltaTime;
         }
     }
 
@@ -63,26 +73,26 @@ public class Shoot : MonoBehaviour {
         if (yRelativeX == 1 || yRelativeX>2)
         {
             ySpeed = CalculateFastestSpeed(yRelativeX);
-            xSpeed = speed - ySpeed;
+            xSpeed = force - ySpeed;
 //            Debug.Log("Equal or Y>2x xSpeed: " + xSpeed + " ySpeed: " + ySpeed);
         }
         else if (yRelativeX > 1)
         {
             xSpeed = CalculateFastestSpeed(1 / yRelativeX);
-            ySpeed = speed - xSpeed;
+            ySpeed = force - xSpeed;
 //            Debug.Log("Y>1x && Y<2x xSpeed: " + xSpeed + " ySpeed: " + ySpeed);
         }
         else if (yRelativeX < 1)
         {
             if (yRelativeX <0.5) {
                 xSpeed = CalculateFastestSpeed(1 / yRelativeX);
-                ySpeed = speed - xSpeed;
+                ySpeed = force - xSpeed;
 //                Debug.Log("X>2y xSpeed: " + xSpeed + " ySpeed: " + ySpeed);
             }
             else
             {
                 xSpeed = CalculateFastestSpeed(1 / yRelativeX);
-                ySpeed = speed - xSpeed;
+                ySpeed = force - xSpeed;
 //                Debug.Log("X<y2 && X>y1 xSpeed: " + xSpeed + " ySpeed: " + ySpeed);
             }
         }
@@ -105,12 +115,12 @@ public class Shoot : MonoBehaviour {
         }
         bullet.GetComponent<Rigidbody2D>().velocity = new Vector3(xSpeed, ySpeed);
         //bullet.transform.forward * 100;
-        float traveldistance = travelX / speed;
+        float traveldistance = travelX / force;
         StartCoroutine(LateCall(traveldistance, bullet));
     }
     private float CalculateFastestSpeed(float highestNumber)
     {
-        return  speed - (speed / (highestNumber + 1));
+        return force - (force / (highestNumber + 1));
     }
 
     IEnumerator LateCall(float sec, GameObject bullet)

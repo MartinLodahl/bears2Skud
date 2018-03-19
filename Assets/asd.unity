@@ -521,8 +521,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletSpawn: {fileID: 827916445}
   pool: {fileID: 1808299316}
-  speed: 3
-  travelX: 3
+  speed: 20
+  travelX: 10
 --- !u!23 &1808299311
 MeshRenderer:
   m_ObjectHideFlags: 0
